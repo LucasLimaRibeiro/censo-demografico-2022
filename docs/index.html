@@ -1,0 +1,680 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Análise da estrutura demográfica brasileira a partir dos dados do Censo Demográfico 2022 do IBGE.">
+    <meta name="keywords" content="Censo 2022, IBGE, população brasileira, demografia, Python, análise de dados">
+    <meta name="author" content="Lucas Lima Ribeiro e Gustavo Madruga">
+
+    <title>Censo Demográfico 2022 | Análise da População Brasileira</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f3f6fa;
+            color: #263445;
+            line-height: 1.75;
+        }
+
+        header {
+            background: linear-gradient(135deg, #12345a, #176b87);
+            color: white;
+            padding: 65px 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            max-width: 950px;
+            margin: 0 auto 20px;
+            font-size: 2.3rem;
+            line-height: 1.3;
+        }
+
+        header p {
+            margin: 7px 0;
+        }
+
+        .badges {
+            margin-top: 20px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(255,255,255,.15);
+            border: 1px solid rgba(255,255,255,.4);
+            border-radius: 20px;
+            padding: 5px 13px;
+            margin: 4px;
+            font-size: .85rem;
+        }
+
+        .github {
+            display: inline-block;
+            margin-top: 22px;
+            padding: 10px 20px;
+            background: white;
+            color: #12345a;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+        }
+
+        main {
+            max-width: 1050px;
+            margin: 35px auto;
+            padding: 0 20px;
+        }
+
+        section {
+            background: white;
+            margin-bottom: 25px;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 3px 12px rgba(0,0,0,.05);
+        }
+
+        h2 {
+            color: #12345a;
+            border-bottom: 2px solid #dce8ef;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        h3 {
+            color: #176b87;
+            margin: 20px 0 10px;
+        }
+
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        ul, ol {
+            margin: 10px 0 15px 25px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .question {
+            background: #edf5f8;
+            padding: 15px;
+            border-left: 4px solid #176b87;
+            margin: 12px 0;
+            border-radius: 4px;
+        }
+
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .metric {
+            background: #edf5f8;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .metric strong {
+            display: block;
+            color: #12345a;
+            font-size: 1.4rem;
+        }
+
+        .metric span {
+            font-size: .9rem;
+        }
+
+        pre {
+            background: #172333;
+            color: #e6edf3;
+            padding: 18px;
+            border-radius: 7px;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+
+        code {
+            font-family: Consolas, monospace;
+        }
+
+        a {
+            color: #176b87;
+        }
+
+        .note {
+            background: #fff7e8;
+            border-left: 4px solid #d69e36;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            background: #12345a;
+            color: white;
+        }
+
+        @media(max-width: 600px) {
+            header h1 {
+                font-size: 1.7rem;
+            }
+
+            section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>Censo Demográfico 2022: uma análise da estrutura da população brasileira</h1>
+
+    <p><strong>Lucas Lima Ribeiro e Gustavo Madruga</strong></p>
+    <p>Bacharelado em Sistemas de Informação — 6º período</p>
+    <p>Unilasalle | Disciplina: Linguagem de Programação</p>
+    <p>Professor: Alexandre Neves Louzada | Semestre: 2026.2</p>
+
+    <div class="badges">
+        <span class="badge">IBGE</span>
+        <span class="badge">Censo 2022</span>
+        <span class="badge">Python</span>
+        <span class="badge">Análise de Dados</span>
+        <span class="badge">Ciência Aberta</span>
+    </div>
+
+    <a class="github"
+       href="https://github.com/LucasLimaRibeiro/censo-demografico-2022"
+       target="_blank">
+       Acessar repositório GitHub
+    </a>
+</header>
+
+<main>
+
+<section>
+    <h2>Resumo</h2>
+
+    <p>
+        O Censo Demográfico 2022, realizado pelo Instituto Brasileiro
+        de Geografia e Estatística (IBGE), constitui uma importante fonte
+        de informações sobre a população brasileira. Este trabalho tem
+        como objetivo analisar aspectos da estrutura demográfica do
+        Brasil, considerando a distribuição populacional por sexo,
+        faixa etária e localização geográfica.
+    </p>
+
+    <p>
+        Para o desenvolvimento do estudo, foram utilizados dados
+        agregados da Tabela 9514 do IBGE. O processamento foi realizado
+        por meio da linguagem Python, com utilização das bibliotecas
+        Pandas e NumPy, em um processo de extração, transformação e
+        carregamento dos dados. A análise exploratória foi desenvolvida
+        em notebook Jupyter, enquanto as visualizações foram construídas
+        com Matplotlib, Seaborn e Plotly. Também foi desenvolvido um
+        dashboard interativo utilizando Streamlit.
+    </p>
+
+    <p>
+        Entre os resultados confirmados, a população brasileira
+        contabilizada na base analisada totaliza 203.080.756 habitantes.
+        As mulheres representam 51,48% da população, enquanto os homens
+        correspondem a 48,52%. A análise também permite observar a
+        distribuição por grupos etários e as diferenças populacionais
+        entre regiões e unidades da Federação.
+    </p>
+
+    <p>
+        O projeto busca demonstrar como ferramentas de análise e
+        visualização de dados podem contribuir para a compreensão da
+        realidade demográfica brasileira, além de disponibilizar os
+        procedimentos utilizados de forma reproduzível.
+    </p>
+
+    <p><strong>Palavras-chave:</strong> Censo Demográfico; IBGE;
+    População brasileira; Python; Análise de dados.</p>
+
+    <p><strong>Abstract:</strong> This study analyzes the demographic
+    structure of Brazil using data from the 2022 Population Census,
+    focusing on sex, age groups and geographic distribution. Python
+    libraries were used for data processing, exploratory analysis and
+    interactive visualization.</p>
+
+    <p><strong>Keywords:</strong> Population Census; Brazil;
+    Demography; Python; Data Analysis.</p>
+</section>
+
+<section>
+    <h2>1. Introdução</h2>
+
+    <p>
+        Conhecer as características da população é fundamental para
+        compreender a organização social e territorial de um país.
+        Informações sobre idade, sexo e localização geográfica permitem
+        identificar diferenças demográficas e contribuem para o
+        planejamento de políticas públicas.
+    </p>
+
+    <p>
+        No Brasil, o Instituto Brasileiro de Geografia e Estatística
+        (IBGE) é responsável pela realização do Censo Demográfico,
+        levantamento que fornece informações fundamentais sobre a
+        população e suas condições de vida.
+    </p>
+
+    <p>
+        Neste trabalho, são utilizados dados do Censo Demográfico 2022,
+        especificamente da Tabela 9514, que apresenta informações sobre
+        a população residente por sexo, idade e forma de declaração
+        da idade.
+    </p>
+
+    <h3>Perguntas de pesquisa</h3>
+
+    <div class="question">
+        <strong>RQ1:</strong> Como está distribuída a população
+        brasileira por sexo e faixa etária?
+    </div>
+
+    <div class="question">
+        <strong>RQ2:</strong> Quais são as diferenças na distribuição
+        populacional entre as cinco Grandes Regiões brasileiras?
+    </div>
+
+    <div class="question">
+        <strong>RQ3:</strong> Como a população está distribuída entre
+        as unidades da Federação e quais estados apresentam as maiores
+        e menores populações?
+    </div>
+
+    <h3>Objetivo geral</h3>
+
+    <p>
+        Analisar a estrutura demográfica brasileira a partir dos dados
+        do Censo Demográfico 2022, utilizando técnicas de processamento,
+        análise estatística e visualização de dados.
+    </p>
+
+    <h3>Objetivos específicos</h3>
+
+    <ul>
+        <li>Identificar a distribuição da população por sexo.</li>
+        <li>Explorar a composição populacional por faixa etária.</li>
+        <li>Comparar a população entre as Grandes Regiões.</li>
+        <li>Identificar diferenças entre as unidades da Federação.</li>
+        <li>Desenvolver visualizações e um dashboard interativo.</li>
+    </ul>
+</section>
+
+<section>
+    <h2>2. Metodologia e Pipeline de Dados</h2>
+
+    <h3>2.1 Fonte dos dados</h3>
+
+    <p>
+        A fonte primária utilizada foi o Instituto Brasileiro de
+        Geografia e Estatística (IBGE), por meio dos dados do Censo
+        Demográfico 2022, Tabela 9514.
+    </p>
+
+    <p>
+        A base original foi obtida em formato Excel e contém informações
+        agregadas por localidade, sexo, faixa etária e forma de
+        declaração da idade. Para esta análise, foi selecionada a
+        categoria total da forma de declaração da idade.
+    </p>
+
+    <p>
+        Fonte oficial:
+        <a href="https://www.ibge.gov.br/estatisticas/sociais/trabalho/22827-censo-demografico-2022.html"
+           target="_blank">
+           IBGE — Censo Demográfico 2022
+        </a>.
+    </p>
+
+    <h3>2.2 Tratamento e preparação</h3>
+
+    <p>
+        O processamento foi desenvolvido em Python utilizando Pandas,
+        NumPy e Openpyxl. O script de ETL realiza a leitura das abas
+        da planilha original, seleciona as informações necessárias,
+        organiza as variáveis e converte os valores para formatos
+        adequados à análise.
+    </p>
+
+    <p>
+        Foram produzidas duas bases processadas: uma contendo os
+        valores absolutos da população e outra contendo os percentuais.
+        Os arquivos foram armazenados no formato CSV compactado (.csv.gz),
+        permitindo maior eficiência no armazenamento e compartilhamento.
+    </p>
+
+    <h3>2.3 Estrutura das variáveis</h3>
+
+    <ul>
+        <li><strong>localidade:</strong> Brasil, regiões ou estados.</li>
+        <li><strong>forma_declaracao_idade:</strong> categoria selecionada.</li>
+        <li><strong>ano:</strong> ano de referência dos dados.</li>
+        <li><strong>sexo:</strong> total, homens ou mulheres.</li>
+        <li><strong>faixa_etaria:</strong> grupo de idade.</li>
+        <li><strong>valor:</strong> população absoluta ou percentual.</li>
+    </ul>
+
+    <h3>2.4 Verificação da qualidade</h3>
+
+    <p>
+        Na validação das bases processadas, foram identificados
+        2.178 registros em cada arquivo, totalizando 4.356 registros
+        entre as duas bases. As verificações realizadas no notebook
+        identificaram ausência de valores nulos e de registros
+        duplicados nas bases processadas.
+    </p>
+
+    <h3>2.5 Tecnologias utilizadas</h3>
+
+    <ul>
+        <li>Python: linguagem de programação.</li>
+        <li>Pandas e NumPy: tratamento e manipulação dos dados.</li>
+        <li>Matplotlib e Seaborn: visualizações estáticas.</li>
+        <li>Plotly: visualizações interativas.</li>
+        <li>Streamlit: desenvolvimento do dashboard.</li>
+        <li>Jupyter Notebook: análise exploratória.</li>
+        <li>Git e GitHub: controle de versão e compartilhamento.</li>
+    </ul>
+
+    <h3>2.6 Exemplo do processamento</h3>
+
+    <pre><code>import pandas as pd
+from pathlib import Path
+
+arquivo = Path("data/processed/populacao_2022.csv.gz")
+
+df = pd.read_csv(arquivo)
+
+populacao_brasil = df[
+    (df["localidade"] == "Brasil") &
+    (df["sexo"] == "Total") &
+    (df["faixa_etaria"] == "Total")
+]
+
+print(populacao_brasil)</code></pre>
+</section>
+
+<section>
+    <h2>3. Resultados e Discussão</h2>
+
+    <h3>3.1 Distribuição da população por sexo</h3>
+
+    <p>
+        A base analisada apresenta uma população total de
+        203.080.756 habitantes. Desse total, 98.532.431 são homens
+        e 104.548.325 são mulheres.
+    </p>
+
+    <div class="metric-grid">
+        <div class="metric">
+            <strong>203.080.756</strong>
+            <span>População total</span>
+        </div>
+        <div class="metric">
+            <strong>48,52%</strong>
+            <span>Homens</span>
+        </div>
+        <div class="metric">
+            <strong>51,48%</strong>
+            <span>Mulheres</span>
+        </div>
+    </div>
+
+    <p>
+        Observa-se uma participação feminina ligeiramente superior
+        à masculina na população brasileira. Esse resultado responde
+        parcialmente à primeira pergunta de pesquisa e demonstra
+        diferenças na composição populacional por sexo.
+    </p>
+
+    <h3>3.2 Distribuição por faixa etária</h3>
+
+    <p>
+        A análise por faixa etária identificou maior concentração
+        populacional nos grupos adultos. Entre os grupos analisados,
+        a faixa de 35 a 39 anos apresenta 16.172.791 habitantes,
+        seguida pela faixa de 40 a 44 anos, com 16.072.170 habitantes.
+    </p>
+
+    <p>
+        Esses resultados permitem observar a composição etária da
+        população brasileira e demonstram a importância de analisar
+        diferentes grupos de idade para compreender a estrutura
+        demográfica do país.
+    </p>
+
+    <h3>3.3 Distribuição regional</h3>
+
+    <p>
+        A comparação entre as cinco Grandes Regiões permite identificar
+        diferenças na concentração populacional no território nacional.
+        A distribuição regional é importante para compreender
+        características demográficas e possíveis necessidades de
+        infraestrutura e planejamento público.
+    </p>
+
+    <p>
+        Os valores detalhados por região estão disponíveis nas bases
+        processadas e nas visualizações desenvolvidas no notebook
+        e no dashboard.
+    </p>
+
+    <h3>3.4 Distribuição entre os estados</h3>
+
+    <p>
+        O ranking das unidades da Federação permite comparar os
+        estados mais e menos populosos. Essa análise complementa
+        a dimensão regional e possibilita uma observação mais
+        detalhada da distribuição territorial da população.
+    </p>
+
+    <p>
+        Os resultados completos podem ser consultados no notebook
+        de análise exploratória, que apresenta as tabelas e os
+        gráficos de classificação dos estados.
+    </p>
+
+    <h3>3.5 Dashboard interativo</h3>
+
+    <p>
+        Como recurso complementar de comunicação dos resultados,
+        foi desenvolvido um dashboard utilizando Streamlit e Plotly.
+        A ferramenta permite consultar indicadores populacionais,
+        selecionar localidades e explorar visualmente a distribuição
+        por sexo e faixa etária.
+    </p>
+
+    <p>
+        O dashboard integra os dados processados pelo pipeline,
+        possibilitando uma consulta interativa às informações
+        utilizadas na pesquisa.
+    </p>
+
+    <div class="note">
+        <strong>Observação:</strong> os resultados regionais e estaduais
+        devem ser apresentados com os valores conferidos nas tabelas
+        do notebook. As visualizações complementam a discussão
+        e permitem explorar os dados em maior profundidade.
+    </div>
+</section>
+
+<section>
+    <h2>4. Conclusão</h2>
+
+    <p>
+        O desenvolvimento deste projeto permitiu explorar dados
+        oficiais do Censo Demográfico 2022 e aplicar conhecimentos
+        de programação, tratamento de dados, estatística descritiva
+        e visualização de informações.
+    </p>
+
+    <p>
+        Os resultados demonstram a importância da análise de dados
+        demográficos para compreender a composição da população
+        brasileira, especialmente em relação ao sexo, à idade
+        e à distribuição geográfica.
+    </p>
+
+    <p>
+        A utilização de Python e suas bibliotecas possibilitou
+        estruturar um processo de tratamento reproduzível, gerar
+        indicadores e construir visualizações que facilitam a
+        interpretação dos dados.
+    </p>
+
+    <p>
+        Como limitação, destaca-se que o estudo utiliza uma tabela
+        agregada específica do Censo 2022, não contemplando todas
+        as dimensões sociais, econômicas e territoriais disponíveis
+        na pesquisa. Além disso, a análise está condicionada às
+        categorias e à granularidade disponibilizadas pela fonte.
+    </p>
+
+    <p>
+        Como possibilidade de trabalhos futuros, sugere-se ampliar
+        a análise com outras tabelas do IBGE, incorporando variáveis
+        como escolaridade, condições de moradia e características
+        socioeconômicas da população.
+    </p>
+</section>
+
+<section>
+    <h2>5. Disponibilidade dos Dados e Declaração FAIR</h2>
+
+    <h3>5.1 Disponibilidade</h3>
+
+    <p>
+        Os scripts, notebooks, dicionário de dados e bases processadas
+        estão organizados no repositório GitHub do projeto, permitindo
+        acesso aos procedimentos utilizados na análise.
+    </p>
+
+    <h3>5.2 Declaração FAIR</h3>
+
+    <ul>
+        <li>
+            <strong>Findable (Localizável):</strong> o projeto possui
+            repositório público, identificação de autoria, documentação
+            e referência à fonte oficial dos dados.
+        </li>
+        <li>
+            <strong>Accessible (Acessível):</strong> os arquivos e
+            scripts podem ser consultados publicamente, sem necessidade
+            de credenciais proprietárias.
+        </li>
+        <li>
+            <strong>Interoperable (Interoperável):</strong> os dados
+            processados são disponibilizados em CSV compactado e
+            acompanhados de dicionário de dados.
+        </li>
+        <li>
+            <strong>Reusable (Reutilizável):</strong> o projeto possui
+            documentação, dependências registradas e licença de código
+            aberto, facilitando sua reprodução e reutilização.
+        </li>
+    </ul>
+
+    <h3>5.3 Reprodução do projeto</h3>
+
+    <p>Para obter uma cópia do projeto:</p>
+
+    <pre><code>git clone https://github.com/LucasLimaRibeiro/censo-demografico-2022.git
+
+cd censo-demografico-2022</code></pre>
+
+    <p>Instalação das dependências:</p>
+
+    <pre><code>python -m venv .venv
+
+# Windows
+.venv\Scripts\activate
+
+python -m pip install -r requirements.txt</code></pre>
+
+    <p>Execução do processamento:</p>
+
+    <pre><code>python -m src.etl</code></pre>
+
+    <p>Execução do dashboard:</p>
+
+    <pre><code>python -m streamlit run app.py</code></pre>
+
+    <p>
+        A reprodução integral depende da disponibilidade do arquivo
+        original do IBGE em data/raw, ou de um procedimento de
+        aquisição equivalente documentado no repositório.
+    </p>
+</section>
+
+<section>
+    <h2>6. Referências</h2>
+
+    <p>
+        INSTITUTO BRASILEIRO DE GEOGRAFIA E ESTATÍSTICA (IBGE).
+        <strong>Censo Demográfico 2022.</strong> Rio de Janeiro:
+        IBGE, 2022. Disponível em:
+        <a href="https://www.ibge.gov.br/estatisticas/sociais/trabalho/22827-censo-demografico-2022.html"
+           target="_blank">
+           Portal do IBGE
+        </a>. Acesso em: 15 nov. 2026.
+    </p>
+
+    <p>
+        MCKINNEY, Wes. <strong>Python for Data Analysis.</strong>
+        3. ed. Sebastopol: O'Reilly Media, 2022.
+    </p>
+
+    <p>
+        PANDAS DEVELOPMENT TEAM. <strong>pandas documentation.</strong>
+        Disponível em:
+        <a href="https://pandas.pydata.org/docs/"
+           target="_blank">Documentação Pandas</a>.
+    </p>
+
+    <p>
+        STREAMLIT. <strong>Streamlit documentation.</strong>
+        Disponível em:
+        <a href="https://docs.streamlit.io/"
+           target="_blank">Documentação Streamlit</a>.
+    </p>
+
+    <p>
+        PLOTLY. <strong>Plotly Python documentation.</strong>
+        Disponível em:
+        <a href="https://plotly.com/python/"
+           target="_blank">Documentação Plotly</a>.
+    </p>
+</section>
+
+</main>
+
+<footer>
+    <p><strong>Censo Demográfico 2022 — Análise da População Brasileira</strong></p>
+    <p>Lucas Lima Ribeiro e Gustavo Madruga | Unilasalle | 2026.2</p>
+    <p>Projeto acadêmico desenvolvido com Python e ferramentas de ciência de dados.</p>
+</footer>
+
+</body>
+</html>
